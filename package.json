@@ -1,0 +1,41 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "apollo-client": "^1.1.1",
+    "apollo-test-utils": "^0.1.1",
+    "axios": "^0.16.2",
+    "bluebird": "^3.5.0",
+    "bootstrap": "3",
+    "express": "^4.15.3",
+    "false": "0.0.4",
+    "graphql-tools": "^0.10.0",
+    "lodash": "^4.17.4",
+    "path": "^0.12.7",
+    "prop-types": "^15.5.10",
+    "react": "^15.4.2",
+    "react-apollo": "^1.1.2",
+    "react-bootstrap": "^0.31.0",
+    "react-dom": "^15.4.2",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.0.0",
+    "react-sidebar": "^2.3.2",
+    "styled-components": "^2.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.0",
+    "react-scripts": "0.9.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "start-serve": "node server.js"
+  }
+}
