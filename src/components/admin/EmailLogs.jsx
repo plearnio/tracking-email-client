@@ -4,9 +4,6 @@ import {
   graphql
 } from 'react-apollo'
 import {
-  Link
-} from 'react-router-dom'
-import {
   Grid,
   Col,
   Row
@@ -32,6 +29,15 @@ const Title = styled.h3`
   border: none;
   color: #ddd;
 `
+const ALink = styled.a`
+  background-color: #383838;
+  padding: 5px;
+  border-radius: 3px;
+
+  &:hover {
+    color: white;
+  }
+`
 
 const styles = {
   expanded: {
@@ -56,15 +62,23 @@ const EmailLogDetails = ({ data: { loading, error, emailLogById } }) => {
         <Row>
           <Col sm={12} md={12}>
             <Title> To User </Title> <Content> {emailLogById.toUser} </Content>
-            <Title> E mail - Config </Title> 
+            <Title> E mail - Config </Title>
             <Content>
-              <a href={`/admin/emailconfigs/${emailLogById.mailConfig._id}` }>
+              <ALink href={`/admin/emailconfigs/${emailLogById.mailConfig._id}` }>
                 {emailLogById.mailConfig.name}
-              </a>
+              </ALink>
             </Content>
-            <Title> Counter </Title> 
+            <Title> Counter </Title>
             <Content> click : {emailLogById.counter.click} </Content>
             <Content> open : {emailLogById.counter.open} </Content>
+            <Title> Expected flows </Title>
+            <Content> name :
+              { ' ' }
+              <ALink href={`/admin/flowconfigs/${emailLogById.expectedFlow.flow._id}`} >
+                {emailLogById.expectedFlow.flow.name}
+              </ALink>
+            </Content>
+            <Content> success : {emailLogById.expectedFlow.success} </Content>
           </Col>
         </Row>
       </Panel>
@@ -92,6 +106,13 @@ export const EmailLogDetailsQuery = gql`
       mailConfig {
         _id
         name
+      }
+      expectedFlow {
+        flow {
+          _id
+          name
+        }
+        success
       }
     }
   }

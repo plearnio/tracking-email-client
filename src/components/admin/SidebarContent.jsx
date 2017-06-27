@@ -47,8 +47,8 @@ const styles = {
   },
 }
 
-const SidebarContent = (props) => {
-  const style = props.style ? { ...styles.sidebar, ...props.style } : styles.sidebar
+const SidebarContent = () => {
+  const style = styles.sidebar
 
   return (
     <MaterialTitlePanel title="Menu" style={style}>
@@ -60,10 +60,10 @@ const SidebarContent = (props) => {
           <Link key="2" to="/admin/flowconfigs">Flows Configuration</Link>
         </MenuHover>
         <MenuHover>
-          <Link key="3" to="/admin/maillogs">Mail Logs</Link>
+          <Link key="3" to="/admin/emaillogs">Mail Logs</Link>
         </MenuHover>
         <MenuHover>
-          <Link key="4" to="/admin/userlist">User Infomation</Link>
+          <Link key="4" to="/admin/userlists">User Infomation</Link>
         </MenuHover>
       </div>
     </MaterialTitlePanel>
@@ -71,7 +71,7 @@ const SidebarContent = (props) => {
 }
 
 SidebarContent.propTypes = {
-  style: PropTypes.object,
+  style: React.PropTypes.object
 }
 
 export default SidebarContent

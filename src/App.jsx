@@ -3,8 +3,9 @@ import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
+  Redirect,
   Switch,
-  Redirect
+  browserHistory
 } from 'react-router-dom'
 import {
   ApolloClient,
@@ -20,8 +21,7 @@ import EmailConfigsMenu from './components/admin/EmailConfigsMenu'
 import FlowConfigsMenu from './components/admin/FlowConfigsMenu'
 import EmailLogsMenu from './components/admin/EmailLogsMenu'
 import SidebarContent from './components/admin/SidebarContent'
-
-import NotFound from './components/general/NotFound'
+import UserListMenu from './components/admin/UserListMenu'
 
 import Register from './components/demo/Register'
 
@@ -148,7 +148,7 @@ class App extends React.Component {
     }
 
     return (
-      <Router>
+      <Router history={browserHistory}>
         <Switch>
           <Route exact path="/demo/" component={Register} />
           <Route path="/admin/">
@@ -162,8 +162,8 @@ class App extends React.Component {
                   <Switch>
                     <Route path="/admin/emailconfigs" component={EmailConfigsMenu} />
                     <Route path="/admin/flowconfigs" component={FlowConfigsMenu} />
-                    <Route path="/admin/maillogs" component={EmailLogsMenu} />
-                    <Route path="/admin/userlist" component={NotFound} />
+                    <Route path="/admin/emaillogs" component={EmailLogsMenu} />
+                    <Route path="/admin/userlists" component={UserListMenu} />
                     <Route path="/">
                       <Redirect to="/admin/emailconfigs" />
                     </Route>

@@ -60,7 +60,6 @@ const FlowConfigDetails = ({ data: { loading, error, flowConfigById } }) => {
   if (!flowConfigById) {
     return <Loading />
   }
-  console.log(flowConfigById)
   return (
     <Grid style={styles.expanded}>
       <Panel>
