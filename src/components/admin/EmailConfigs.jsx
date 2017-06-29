@@ -30,15 +30,22 @@ const Title = styled.h3`
   color: #ddd;
 `
 
+const PreviewMail = styled.div`
+  padding: 20px;
+  border: 2px dashed rgba(255,255,255,0.1);
+`
+
 const styles = {
   expanded: {
     width: '100%',
   }
 }
+const previewMail = (name) => { 
+  return { __html: `<h1 style="color:#b1a6ef">${name}</h1><a href="/demo">click</a>` }
+}
 
-const EmailConfigDetails = ({ data: { loading, error, emailConfigById }, match, location }) => {
+const EmailConfigDetails = ({ data: { loading, error, emailConfigById } }) => {
   if (loading) {
-    console.log(emailConfigById)
     return <Loading />
   }
   if (error) {
@@ -57,6 +64,9 @@ const EmailConfigDetails = ({ data: { loading, error, emailConfigById }, match, 
           <Col sm={12} md={8}>
             <Title> Description </Title> <Content> {emailConfigById.description} </Content>
           </Col>
+          <Col sm={12} md={12}>
+            <Title> Demo </Title> <Content><center><PreviewMail dangerouslySetInnerHTML={previewMail(emailConfigById.name)} /></center></Content>
+          </Col>
         </Row>
       </Panel>
     </Grid>
@@ -68,9 +78,6 @@ EmailConfigDetails.propTypes = {
     loading: React.PropTypes.bool,
     error: React.PropTypes.object,
     emailConfigById: React.PropTypes.object,
-  }).isRequired,
-  match: React.PropTypes.shape({
-    params: React.PropTypes.object
   }).isRequired
 }
 

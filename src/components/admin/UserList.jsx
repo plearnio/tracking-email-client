@@ -12,12 +12,12 @@ import {
 } from 'react-bootstrap'
 import styled from 'styled-components'
 import {
-  withRouter,
-  Redirect
+  withRouter
 } from 'react-router-dom'
 
 import NotFound from '../general/NotFound'
 import Loading from '../general/Loading'
+import SendMail from './SendMail'
 
 const Content = styled.h4`
   color: #969696;
@@ -99,6 +99,14 @@ const MyPagination = styled(Pagination)`
   
 `
 
+const Button = styled.button`
+  background-color: #111;
+  padding: 15px;
+  border: 1px solid rgba(255,255,255,0.1);
+  color:white;
+  font-size: 110%;
+`
+
 const styles = {
   expanded: {
     width: '100%',
@@ -110,7 +118,7 @@ class UserListDetails extends Component {
   constructor(props) {
     super(props)
     const { userListId } = this.props.match.params
-    let page = parseInt(this.props.match.params.page) || 1
+    const page = parseInt(this.props.match.params.page, 10) || 1
     this.state = {
       userId: userListId,
       activePage: page,
@@ -129,7 +137,8 @@ class UserListDetails extends Component {
     this.setState({
       activePage: eventKey
     }, () => {
-      this.props.history.replace(`/admin/userlists/${this.state.userId}/${eventKey}`)
+      console.log(this.state.userId)
+      this.props.history.replace(`/admin/userlists/${this.props.match.params.userListId}/${eventKey}`)
     })
   }
 
@@ -152,7 +161,7 @@ class UserListDetails extends Component {
 
   render() {
     const { loading, error, userListById } = this.props.data
-    let page = parseInt(this.props.match.params.page)
+    let page = Number.parseInt(this.props.match.params.page, 10)
     const { userListId } = this.props.match.params
     if (loading) {
       return <Loading />
@@ -163,7 +172,6 @@ class UserListDetails extends Component {
     if (!userListById) {
       return <Loading />
     }
-    console.log(userListId)
     if (!page) {
       this.props.history.replace(`/admin/userlists/${userListId}/1`)
       page = 1
@@ -172,10 +180,15 @@ class UserListDetails extends Component {
       <Grid style={styles.expanded}>
         <Panel>
           <Row>
-            <Col sm={12} md={12}>
+            <Col sm={12} md={8}>
               <Title> Name </Title> <Content> {userListById.name} </Content>
               <Title> E-mail </Title> <Content> {userListById.userEmail} </Content>
               <Title> Age </Title> <Content> {userListById.age} </Content>
+            </Col>
+            <Col sm={12} md={4}>
+              <SendMail userId={userListById._id} userName={userListById.name} />
+            </Col>
+            <Col sm={12} md={12}>
               <StyledTable responsive>
                 <TableHeadPanel>
                   <tr>
@@ -214,7 +227,11 @@ UserListDetails.propTypes = {
     loading: React.PropTypes.bool,
     error: React.PropTypes.object,
     userListById: React.PropTypes.object,
-  }).isRequired
+  }).isRequired,
+  match: React.PropTypes.shape({
+    params: React.PropTypes.object,
+  }).isRequired,
+  history: React.PropTypes.object.isRequired
 }
 
 export const UserListByIdDetailsQuery = gql`
@@ -237,11 +254,11 @@ export const UserListByIdDetailsQuery = gql`
 
 export default (graphql(UserListByIdDetailsQuery, {
   options: (props) => {
-    console.log(props)
     return {
       variables: {
         userListId: props.match.params.userListId,
         pageValue: props.match.params.page || 1
       },
-  }},
+    }
+  },
 })(withRouter(UserListDetails)))
