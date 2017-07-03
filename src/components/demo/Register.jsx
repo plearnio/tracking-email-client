@@ -56,6 +56,7 @@ class Register extends Component {
     this.setState({
       actions: newActions
     })
+    console.log(name)
     axios.get(`http://localhost:4000/tracking/${name}/Register`)
       .catch((error) => {
         console.log(error)

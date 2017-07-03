@@ -10,23 +10,24 @@
 = add extensions
 	- pagination
 	- search and filter
+= demo 
 
 # done
-- admin page 100%
+- admin page
 	- user list
 	- email configs
 	- flow configs
   - email logs
 - demo page that can send action to server 100%
-= add extensions 15 %
+= add extensions
 	- pagination
 	- search and filter
 
 
 # processing
-- pagination 20% ( already add in userlist but now contains little bug about router-dom and routerHistory -> in processing )
-- search and filter 20%
-	- search 30 % ( test search with dummy data , in process on implement to real data flow)
-	- filter 10 % ( implement aggregate to graphql resolver )
+- include pagination to every pages
+- search and filter
+	- search in realtime
+	- filter
 		- sort 
-		- aggregate data result
+		- show only
