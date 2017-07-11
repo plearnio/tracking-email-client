@@ -5,23 +5,20 @@ import {
   Form,
   FormGroup,
   Col,
-  FormControl
+  FormControl,
+  DropdownButton,
+  InputGroup,
+  MenuItem,
+  ButtonGroup,
+  Button,
 } from 'react-bootstrap'
 import axios from 'axios'
 
-const Button = styled.button`
-  background-color: #111;
-  padding: 15px;
-  border: 1px solid rgba(255,255,255,0.1);
-  color:white;
-  margin-top: 10px;
-  font-size: 110%;
-`
-
-const ModalButton = Button.extend`
-  background-color: #282828;
-  border-radius: 5px;
+const OwnButton = styled(Button)`
   padding: 10px;
+  border: 1px solid rgba(0,0,0,0.3);
+  color: #111;
+  margin-top: 10px;
 `
 
 class SendMailModal extends Component {
@@ -29,25 +26,22 @@ class SendMailModal extends Component {
     super(props)
     this.state = {
       showModal: false,
-      data: {
-        toMail: '',
-        userId: this.props.userId,
-        fromMail: '',
-        fromPassword: '',
-        secret: '',
-      },
+      fromPassword: '',
+      fromMail: 'p.plearn.io@gmail.com',
+      data: this.props.userData,
       isPostSuccess: false,
-      isPosted: false
+      isPosted: false,
+      emailConfig: this.props.emailConfigs[0]
     }
     this.open = this.open.bind(this)
     this.close = this.close.bind(this)
     this.sendMailToServer = this.sendMailToServer.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleSelect = this.handleSelect.bind(this)
   }
 
   sendMailToServer(e) {
-    console.log(e.target.value)
-    axios.post('http://localhost:4000/sendmail', this.state.data).then((res) => {
+    axios.post('http://localhost:4000/sendmail', this.state).then((res) => {
       if (res.data === 'correct !') {
         this.setState({
           isPosted: true,
@@ -64,9 +58,13 @@ class SendMailModal extends Component {
     })
   }
 
+  handleSelect(emailConfig) {
+    this.state.emailConfig = emailConfig
+    this.setState(this.state)
+  }
+
   handleChange(e) {
-    console.log(e.target.name)
-    this.state.data[e.target.name] = e.target.value
+    this.state[e.target.name] = e.target.value
     this.setState(this.state)
   }
 
@@ -79,17 +77,42 @@ class SendMailModal extends Component {
   }
 
   render() {
-    const { userName } = this.props
-
+    const { userData, emailConfigs } = this.props
     return (
       <div>
-        <Button onClick={this.open} >
-          Send Demo Mail
-        </Button>
-
+        <ButtonGroup>
+          <OwnButton onClick={this.open} >
+            Send Demo Mail
+          </OwnButton>
+          <DropdownButton
+            componentClass={InputGroup.Button}
+            id="input-dropdown-addon"
+            title={this.state.emailConfig.name}
+            style={{ padding: '10px',
+              marginTop: '10px',
+              color: '#111',
+              border: '1px solid rgba(0,0,0,0.3)'
+            }}
+          >
+            {
+              emailConfigs.map((emailConfig) => {
+                return (
+                  <MenuItem
+                    key={emailConfig._id}
+                    name="emailConfig"
+                    onClick={() => this.handleSelect(emailConfig)}
+                  >
+                    {emailConfig.name}
+                  </MenuItem>
+                )
+              })
+            }
+          </DropdownButton>
+        </ButtonGroup>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
-            <Modal.Title>Send Email to User {userName}</Modal.Title>
+            <Modal.Title>Send Email to User {userData.name}</Modal.Title>
+            <Modal.Title>Type : {this.state.emailConfig.name}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form horizontal>
@@ -101,9 +124,9 @@ class SendMailModal extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="email"
-                    placeholder="Email"
                     name="toMail"
-                    onChange={this.handleChange}
+                    value={userData.userEmail}
+                    disabled
                   />
                 </Col>
               </FormGroup>
@@ -116,9 +139,8 @@ class SendMailModal extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="email"
-                    placeholder="Email"
                     name="fromMail"
-                    onChange={this.handleChange}
+                    value="p.plearn.io@gmail.com"
                   />
                 </Col>
               </FormGroup>
@@ -136,27 +158,12 @@ class SendMailModal extends Component {
                   />
                 </Col>
               </FormGroup>
-              <hr />
-              <h2> Secret </h2>
-              <FormGroup controlId="formHorizontalEmail">
-                <Col sm={2}>
-                  Email
-                </Col>
-                <Col sm={10}>
-                  <FormControl
-                    type="password"
-                    placeholder="secret for admin"
-                    name="secret"
-                    onChange={this.handleChange}
-                  />
-                </Col>
-              </FormGroup>
             </Form>
             {(this.state.isPosted && this.state.isPostSuccess) && (<center><hr />Pass</center>)}
             {(this.state.isPosted && !this.state.isPostSuccess) && (<center><hr />Fail</center>)}
           </Modal.Body>
           <Modal.Footer>
-            <ModalButton onClick={this.sendMailToServer}>Submit</ModalButton>
+            <Button onClick={this.sendMailToServer}>Submit</Button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -165,8 +172,9 @@ class SendMailModal extends Component {
 }
 
 SendMailModal.propTypes = {
-  userId: React.PropTypes.string.isRequired,
-  userName: React.PropTypes.string.isRequired
+  userData: React.PropTypes.shape({
+    name: React.PropTypes.string.isRequired
+  }).isRequired,
 }
 
 export default SendMailModal

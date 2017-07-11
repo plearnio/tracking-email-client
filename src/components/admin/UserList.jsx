@@ -8,7 +8,12 @@ import {
   Col,
   Row,
   Pagination,
-  Table
+  Table,
+  DropdownButton,
+  MenuItem,
+  InputGroup,
+  FormGroup,
+  FormControl,
 } from 'react-bootstrap'
 import styled from 'styled-components'
 import {
@@ -18,18 +23,20 @@ import {
 import NotFound from '../general/NotFound'
 import Loading from '../general/Loading'
 import SendMail from './SendMail'
+import EmailConfigsMenu from './EmailConfigsMenu'
+import Chart from './charts/ChartUserList'
 
 const Content = styled.h4`
-  color: #969696;
+  color: #787878;
 `
 
 const TableContent = styled.h5`
-  color: #eee;
+  color: #1e1e1e;
   font-size: 90%;
 `
 
 const Panel = styled.div`
-  background-color: #181818;
+  background-color: #ddd;
   padding: 20px;
   padding-top: 40px;
   padding-bottom: 40px;
@@ -39,19 +46,19 @@ const Title = styled.h3`
   background-color: transparent;
   outline: none;
   border: none;
-  color: #ddd;
+  color: #1e1e1e;
 `
 
 const TableBodyPanel = styled.tbody`
-  background-color: #252525;
+  background-color: white;
 `
 
 const TableHeadPanel = styled.thead`
-  background-color: #252525;
+  background-color: white;
 `
 
 const StyledTable = styled(Table)`
-  border: 1px solid rgba(255,255,255,1);
+  border: 1px solid rgba(0,0,0,0.5);
   margin-top: 20px;
 `
 
@@ -160,7 +167,7 @@ class UserListDetails extends Component {
   }
 
   render() {
-    const { loading, error, userListById } = this.props.data
+    const { loading, error, userListById, emailConfigs } = this.props.data
     let page = Number.parseInt(this.props.match.params.page, 10)
     const { userListId } = this.props.match.params
     if (loading) {
@@ -171,6 +178,8 @@ class UserListDetails extends Component {
     }
     if (!userListById) {
       return <Loading />
+    } else {
+      console.log(userListById)
     }
     if (!page) {
       this.props.history.replace(`/admin/userlists/${userListId}/1`)
@@ -180,13 +189,13 @@ class UserListDetails extends Component {
       <Grid style={styles.expanded}>
         <Panel>
           <Row>
-            <Col sm={12} md={8}>
+            <Col sm={12} md={5}>
               <Title> Name </Title> <Content> {userListById.name} </Content>
               <Title> E-mail </Title> <Content> {userListById.userEmail} </Content>
               <Title> Age </Title> <Content> {userListById.age} </Content>
             </Col>
-            <Col sm={12} md={4}>
-              <SendMail userId={userListById._id} userName={userListById.name} />
+            <Col sm={12} md={7}>
+              <SendMail userData={userListById} emailConfigs={emailConfigs} />
             </Col>
             <Col sm={12} md={12}>
               <StyledTable responsive>
@@ -217,6 +226,7 @@ class UserListDetails extends Component {
             </Col>
           </Row>
         </Panel>
+        <Chart dataStatistic={userListById.emailConfigListStat} allStat={userListById.allStat} />
       </Grid>
     )
   }
@@ -248,6 +258,28 @@ export const UserListByIdDetailsQuery = gql`
       }
       pageNow
       pageAll
+      emailConfigListStat {
+        _id
+        clickAvg
+        openAvg
+        success
+        count
+        mailConfig {
+          name
+          expectedFlow
+        }
+      }
+      allStat {
+        count
+        successAvg
+        clickAvg
+        openAvg
+      }
+    }
+    emailConfigs {
+      _id
+      name
+      description
     }
   }
 `

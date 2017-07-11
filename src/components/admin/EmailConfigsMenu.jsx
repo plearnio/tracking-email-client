@@ -90,8 +90,7 @@ export const dataObjListQuery = gql`
 `
 
 export default graphql(dataObjListQuery, {
-  options: props => ({
-    variables: { menu: props.match.params.menu },
+  options: () => ({
     pollInterval: 5000
   }),
 })(DataObjList)

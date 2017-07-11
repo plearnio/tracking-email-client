@@ -23,7 +23,9 @@ import EmailLogsMenu from './components/admin/EmailLogsMenu'
 import SidebarContent from './components/admin/SidebarContent'
 import UserListMenu from './components/admin/UserListMenu'
 
+import Upgrade from './components/demo/Upgrade'
 import Register from './components/demo/Register'
+import Login from './components/demo/Login'
 
 const networkInterface = createNetworkInterface({ uri: 'http://localhost:4000/graphql' })
 
@@ -84,13 +86,15 @@ class App extends React.Component {
       mql: mediaql,
       docked: true,
       open: false,
-      nowPage: 1
+      nowPage: 1,
+      user: ''
     }
 
     this.mediaQueryChanged = this.mediaQueryChanged.bind(this)
     this.toggleOpen = this.toggleOpen.bind(this)
     this.onSetOpen = this.onSetOpen.bind(this)
     this.setPage = this.setPage.bind(this)
+    this.handleLogin = this.handleLogin.bind(this)
   }
 
   componentWillMount() {
@@ -129,6 +133,13 @@ class App extends React.Component {
     })
   }
 
+  handleLogin(userId) {
+    console.log(userId)
+    this.setState({
+      user: userId
+    })
+  }
+
   render() {
     const toggleMenu = (
       <div>
@@ -147,10 +158,24 @@ class App extends React.Component {
       onSetOpen: this.onSetOpen,
     }
 
+    const PrivateRoute = ({ component: Component, ...rest }) => (
+      <Route
+        {...rest}
+        render={
+          props => (
+            !this.state.user ? (
+              <Login checkLogin={this.handleLogin} />
+            ) : (
+              <Component {...props} userId={this.state.user} />
+            )
+          )
+        }
+      />
+    )
+
     return (
       <Router history={browserHistory}>
         <Switch>
-          <Route exact path="/demo/" component={Register} />
           <Route path="/admin/">
             <Sidebar {...sidebarProps}>
               <ApolloProvider client={client}>
@@ -172,8 +197,17 @@ class App extends React.Component {
               </ApolloProvider>
             </Sidebar>
           </Route>
+          <Route path="/demo/">
+            <Switch>
+              <PrivateRoute path="/demo/register" component={Register} />
+              <PrivateRoute path="/demo/upgrade" component={Upgrade} />
+              <Route path="/">
+                <Redirect to="/demo/register" />
+              </Route>
+            </Switch>
+          </Route>
           <Route path="/">
-            <Redirect to="/demo" />
+            <Redirect to="/admin/emailconfigs" />
           </Route>
         </Switch>
       </Router>

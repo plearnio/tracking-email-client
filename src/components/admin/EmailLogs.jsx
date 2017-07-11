@@ -14,10 +14,10 @@ import NotFound from '../general/NotFound'
 import Loading from '../general/Loading'
 
 const Content = styled.h4`
-  color: #969696;
+  color: #787878;
 `
 const Panel = styled.div`
-  background-color: #181818;
+  background-color: #ddd;
   padding: 20px;
   padding-top: 40px;
   padding-bottom: 40px;
@@ -27,10 +27,10 @@ const Title = styled.h3`
   background-color: transparent;
   outline: none;
   border: none;
-  color: #ddd;
+  color: #1e1e1e;
 `
 const ALink = styled.a`
-  background-color: #383838;
+  background-color: #282828;
   padding: 5px;
   border-radius: 3px;
 
@@ -55,6 +55,8 @@ const EmailLogDetails = ({ data: { loading, error, emailLogById } }) => {
   }
   if (!emailLogById) {
     return <Loading />
+  } else {
+    console.log(emailLogById)
   }
   return (
     <Grid style={styles.expanded}>
@@ -71,14 +73,7 @@ const EmailLogDetails = ({ data: { loading, error, emailLogById } }) => {
             <Title> Counter </Title>
             <Content> click : {emailLogById.counter.click} </Content>
             <Content> open : {emailLogById.counter.open} </Content>
-            <Title> Expected flows </Title>
-            <Content> name :
-              { ' ' }
-              <ALink href={`/admin/flowconfigs/${emailLogById.expectedFlow.flow._id}`} >
-                {emailLogById.expectedFlow.flow.name}
-              </ALink>
-            </Content>
-            <Content> success : {emailLogById.expectedFlow.success} </Content>
+            <Content> success : {emailLogById.success} </Content>
           </Col>
         </Row>
       </Panel>
@@ -106,14 +101,9 @@ export const EmailLogDetailsQuery = gql`
       mailConfig {
         _id
         name
+        expectedFlow
       }
-      expectedFlow {
-        flow {
-          _id
-          name
-        }
-        success
-      }
+      success
     }
   }
 `

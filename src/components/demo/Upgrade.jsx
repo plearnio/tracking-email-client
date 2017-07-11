@@ -35,20 +35,18 @@ const ButtonLink = styled.button`
   margin-top: 10px;
 `
 
-class Register extends Component {
+class Upgrade extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
       actions: {
         action1: false,
-        action2: false,
-        action3: false,
         Submit: false
       }
     }
     this.handleCompleted = this.handleCompleted.bind(this)
-    this.handleCompleted('Enter register page')
+    this.handleCompleted('Enter upgrade page')
   }
 
   handleCompleted(nameAction) {
@@ -62,25 +60,17 @@ class Register extends Component {
       url: 'http://localhost:4000/tracking',
       secret: 'secret'
     })
-    tracking.passAction('Register', nameAction, this.props.userId)
+    tracking.passAction('Upgrade', nameAction, this.props.userId)
   }
 
   render() {
     return (
       <center>
         <MainPanel>
-          <Title> Register </Title>
+          <Title> Upgrade </Title>
           <Input nameAction="action1" setCompleted={this.handleCompleted} />
           {
             this.state.actions.action1 &&
-            <Input nameAction="action2" setCompleted={this.handleCompleted} />
-          }
-          {
-            this.state.actions.action2 &&
-            <Input nameAction="action3" setCompleted={this.handleCompleted} />
-          }
-          {
-            this.state.actions.action3 &&
             <Button bsStyle="success" onClick={() => this.handleCompleted('Submit')} >
               Success
             </Button>
@@ -95,4 +85,4 @@ class Register extends Component {
   }
 }
 
-export default Register
+export default Upgrade
